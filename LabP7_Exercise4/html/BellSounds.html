@@ -1,0 +1,399 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>BellSounds</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-12-03">
+<meta name="DC.source" content="BellSounds.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Creating a Bell with Harmonics</a>
+</li>
+<li>
+<a href="#2">Creating Bell using FM synthesis</a>
+</li>
+<li>
+<a href="#3">Changing Modulation Frequency</a>
+</li>
+<li>
+<a href="#4">Low Carrier Frequency</a>
+</li>
+<li>
+<a href="#5">High Modulation</a>
+</li>
+<li>
+<a href="#6">Sideband Filtering effect on Sound</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Creating a Bell with Harmonics</h2>
+<p>Parameters</p>
+<pre class="codeinput">sample_rate = 44100;
+duration = 4.0;
+fundamental_freq = 440.0;
+decay_rate = 0.5;
+attack_duration = 0.01;
+
+t = 0:1/sample_rate:duration-1/sample_rate;
+
+<span class="comment">% Harmonics: Create harmonics (fundamental to 7th)</span>
+harmonics = [];
+<span class="keyword">for</span> k = 1:7
+    detune_factor = 1 + 0.01 * k * randn;
+    amplitude = 1 / k;
+    harmonics = [harmonics; amplitude * sin(2 * pi * fundamental_freq * k * t * detune_factor)];
+<span class="keyword">end</span>
+
+<span class="comment">% Combine harmonics into the sound wave</span>
+sound_wave = sum(harmonics, 1);
+
+<span class="comment">% Sharp attack envelope for big strike</span>
+attack_samples = round(attack_duration * sample_rate);
+attack_envelope = [linspace(0, 1, attack_samples), ones(1, length(t) - attack_samples)];
+
+<span class="comment">% Apply decay envelope (exponential decay)</span>
+decay_envelope = exp(-decay_rate * t);
+
+<span class="comment">% Combine attack and decay envelopes</span>
+sound_wave = sound_wave .* attack_envelope .* decay_envelope;
+
+<span class="comment">% Normalize</span>
+sound_wave = sound_wave / max(abs(sound_wave));
+
+<span class="comment">% Save the sound</span>
+audiowrite(<span class="string">'big_strike_bell_like_sound.wav'</span>, sound_wave, sample_rate);
+
+<span class="comment">% Plot waveform</span>
+figure;
+plot(t, sound_wave);
+title(<span class="string">'Bell-like Sound with Quick Attack'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+</pre>
+<img vspace="5" hspace="5" src="BellSounds_01.png" alt=""> <h2 id="2">Creating Bell using FM synthesis</h2>
+<p>FM synthesis parameters</p>
+<pre class="codeinput">Fs = 44100;
+duration = 5;
+t = linspace(0, duration, Fs * duration);
+
+<span class="comment">% Original FM Bell Sound</span>
+carrier_freq = 440;
+modulator_freq = 400;
+modulation_index = 5;
+
+bell_sound = cos(2 * pi * carrier_freq * t + <span class="keyword">...</span>
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+
+decay_rate = 3;
+amplitude_envelope = exp(-decay_rate * t);
+bell_sound = bell_sound .* amplitude_envelope;
+
+<span class="comment">% Normalize</span>
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite(<span class="string">'bell_sound_fm_original.wav'</span>, bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title(<span class="string">'FM Bell Sound (Modulator Frequency = 400 Hz)'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+</pre>
+<img vspace="5" hspace="5" src="BellSounds_02.png" alt=""> <img vspace="5" hspace="5" src="BellSounds_03.png" alt=""> <h2 id="3">Changing Modulation Frequency</h2>
+<pre class="codeinput">modulator_freq = 100;
+bell_sound = cos(2 * pi * carrier_freq * t + <span class="keyword">...</span>
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite(<span class="string">'carrier_bell_sound.wav'</span>, bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title(<span class="string">'FM Bell Sound (Modulator Frequency = 100 Hz)'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+</pre>
+<img vspace="5" hspace="5" src="BellSounds_04.png" alt=""> <h2 id="4">Low Carrier Frequency</h2>
+<pre class="codeinput">carrier_freq = 100;
+modulator_freq = 400;
+bell_sound = cos(2 * pi * carrier_freq * t + <span class="keyword">...</span>
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite(<span class="string">'carrier_bell_sound_low_freq.wav'</span>, bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title(<span class="string">'FM Bell Sound (Carrier Frequency = 100 Hz)'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+</pre>
+<img vspace="5" hspace="5" src="BellSounds_05.png" alt=""> <h2 id="5">High Modulation</h2>
+<pre class="codeinput">carrier_freq = 400;
+modulator_freq = 1000;
+bell_sound = cos(2 * pi * carrier_freq * t + <span class="keyword">...</span>
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite(<span class="string">'reverse_bell_sound_fm.wav'</span>, bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title(<span class="string">'FM Bell Sound (Modulator Frequency = 1000 Hz)'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+</pre>
+<img vspace="5" hspace="5" src="BellSounds_06.png" alt=""> <h2 id="6">Sideband Filtering effect on Sound</h2>
+<pre class="codeinput">carrier_freq = 500;
+modulator_freq = 400;
+bell_sound = cos(2 * pi * carrier_freq * t + <span class="keyword">...</span>
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+fc_low = carrier_freq - 20;
+fc_high = carrier_freq + 20;
+
+[b, a] = butter(4, [fc_low, fc_high] / (Fs / 2), <span class="string">'bandpass'</span>);
+filtered_sound = filter(b, a, bell_sound);
+filtered_sound = filtered_sound / max(abs(filtered_sound));
+
+audiowrite(<span class="string">'bell_sound_fm_filtered.wav'</span>, filtered_sound, Fs);
+
+figure;
+plot(t, filtered_sound);
+title(<span class="string">'Filtered FM Bell Sound (Isolated Carrier Frequency)'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+</pre>
+<img vspace="5" hspace="5" src="BellSounds_07.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Creating a Bell with Harmonics
+% Parameters
+sample_rate = 44100; 
+duration = 4.0;  
+fundamental_freq = 440.0; 
+decay_rate = 0.5;     
+attack_duration = 0.01; 
+
+t = 0:1/sample_rate:duration-1/sample_rate;
+
+% Harmonics: Create harmonics (fundamental to 7th)
+harmonics = [];
+for k = 1:7  
+    detune_factor = 1 + 0.01 * k * randn;  
+    amplitude = 1 / k;  
+    harmonics = [harmonics; amplitude * sin(2 * pi * fundamental_freq * k * t * detune_factor)];
+end
+
+% Combine harmonics into the sound wave
+sound_wave = sum(harmonics, 1);
+
+% Sharp attack envelope for big strike
+attack_samples = round(attack_duration * sample_rate);
+attack_envelope = [linspace(0, 1, attack_samples), ones(1, length(t) - attack_samples)];
+
+% Apply decay envelope (exponential decay)
+decay_envelope = exp(-decay_rate * t);  
+
+% Combine attack and decay envelopes
+sound_wave = sound_wave .* attack_envelope .* decay_envelope; 
+
+% Normalize
+sound_wave = sound_wave / max(abs(sound_wave)); 
+
+% Save the sound
+audiowrite('big_strike_bell_like_sound.wav', sound_wave, sample_rate);
+
+% Plot waveform
+figure;
+plot(t, sound_wave);
+title('Bell-like Sound with Quick Attack');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+%% Creating Bell using FM synthesis
+% FM synthesis parameters
+Fs = 44100;             
+duration = 5;         
+t = linspace(0, duration, Fs * duration);  
+
+% Original FM Bell Sound
+carrier_freq = 440;      
+modulator_freq = 400;   
+modulation_index = 5;    
+
+bell_sound = cos(2 * pi * carrier_freq * t + ...
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+
+decay_rate = 3;  
+amplitude_envelope = exp(-decay_rate * t);
+bell_sound = bell_sound .* amplitude_envelope;
+
+% Normalize
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite('bell_sound_fm_original.wav', bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title('FM Bell Sound (Modulator Frequency = 400 Hz)');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+%% Changing Modulation Frequency
+modulator_freq = 100;  
+bell_sound = cos(2 * pi * carrier_freq * t + ...
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite('carrier_bell_sound.wav', bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title('FM Bell Sound (Modulator Frequency = 100 Hz)');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+%% Low Carrier Frequency
+carrier_freq = 100;    
+modulator_freq = 400;   
+bell_sound = cos(2 * pi * carrier_freq * t + ...
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite('carrier_bell_sound_low_freq.wav', bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title('FM Bell Sound (Carrier Frequency = 100 Hz)');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+%% High Modulation
+carrier_freq = 400;      
+modulator_freq = 1000;    
+bell_sound = cos(2 * pi * carrier_freq * t + ...
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+audiowrite('reverse_bell_sound_fm.wav', bell_sound, Fs);
+
+figure;
+plot(t, bell_sound);
+title('FM Bell Sound (Modulator Frequency = 1000 Hz)');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+%% Sideband Filtering effect on Sound
+carrier_freq = 500;      
+modulator_freq = 400;    
+bell_sound = cos(2 * pi * carrier_freq * t + ...
+                 modulation_index * sin(2 * pi * modulator_freq * t));
+bell_sound = bell_sound .* amplitude_envelope;
+bell_sound = bell_sound / max(abs(bell_sound));
+
+fc_low = carrier_freq - 20;  
+fc_high = carrier_freq + 20; 
+
+[b, a] = butter(4, [fc_low, fc_high] / (Fs / 2), 'bandpass');
+filtered_sound = filter(b, a, bell_sound);
+filtered_sound = filtered_sound / max(abs(filtered_sound));
+
+audiowrite('bell_sound_fm_filtered.wav', filtered_sound, Fs);
+
+figure;
+plot(t, filtered_sound);
+title('Filtered FM Bell Sound (Isolated Carrier Frequency)');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+##### SOURCE END #####
+-->
+</body>
+</html>

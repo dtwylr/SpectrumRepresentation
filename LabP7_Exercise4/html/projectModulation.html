@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>projectModulation</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-12-03">
+<meta name="DC.source" content="projectModulation.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">
+<span class="comment">% Parameters</span>
+sample_rate = 44100;        <span class="comment">% Sampling rate</span>
+duration = 2;               <span class="comment">% Duration of the sound</span>
+carrier_freq = 440;         <span class="comment">% Carrier frequency</span>
+modulating_freq = 5;        <span class="comment">% Modulating frequency</span>
+modulation_index = 50;      <span class="comment">% Modulation index</span>
+
+<span class="comment">% Time</span>
+t = 0:1/sample_rate:duration-1/sample_rate;
+
+<span class="comment">% FM synthesis: Carrier frequency with modulation</span>
+carrier = sin(2 * pi * carrier_freq * t);
+modulator = sin(2 * pi * modulating_freq * t);
+
+modulated_signal = sin(2 * pi * carrier_freq * t + modulation_index * modulator);  <span class="comment">% FM signal</span>
+
+<span class="comment">% Normalize Carrier Frequency</span>
+carrier = carrier / max(abs(carrier));
+modulated_signal = modulated_signal / max(abs(modulated_signal));
+
+
+disp(<span class="string">'Playing unmodulated carrier signal...'</span>);
+sound(carrier, sample_rate);
+
+pause(duration);
+
+<span class="comment">% Play the modulated FM signal</span>
+disp(<span class="string">'Playing modulated FM signal...'</span>);
+sound(modulated_signal, sample_rate);
+
+<span class="comment">% Plot the waveform (first 1000 samples for visualization)</span>
+figure;
+
+<span class="comment">% Carrier waveform plot</span>
+subplot(2,1,1);
+plot(t(1:1000), carrier(1:1000));
+title(<span class="string">'Carrier Frequency (440 Hz)'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+
+<span class="comment">% Modulated waveform plot</span>
+subplot(2,1,2);
+plot(t(1:1000), modulated_signal(1:1000));
+title(<span class="string">'FM Synthesized Signal'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+</pre>
+<pre class="codeoutput">Playing unmodulated carrier signal...
+Playing modulated FM signal...
+</pre>
+<img vspace="5" hspace="5" src="projectModulation_01.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% Parameters
+sample_rate = 44100;        % Sampling rate
+duration = 2;               % Duration of the sound 
+carrier_freq = 440;         % Carrier frequency 
+modulating_freq = 5;        % Modulating frequency 
+modulation_index = 50;      % Modulation index 
+
+% Time
+t = 0:1/sample_rate:duration-1/sample_rate;
+
+% FM synthesis: Carrier frequency with modulation
+carrier = sin(2 * pi * carrier_freq * t);                   
+modulator = sin(2 * pi * modulating_freq * t);              
+
+modulated_signal = sin(2 * pi * carrier_freq * t + modulation_index * modulator);  % FM signal
+
+% Normalize Carrier Frequency
+carrier = carrier / max(abs(carrier));  
+modulated_signal = modulated_signal / max(abs(modulated_signal)); 
+
+
+disp('Playing unmodulated carrier signal...');
+sound(carrier, sample_rate); 
+
+pause(duration);
+
+% Play the modulated FM signal
+disp('Playing modulated FM signal...');
+sound(modulated_signal, sample_rate);
+
+% Plot the waveform (first 1000 samples for visualization)
+figure;
+
+% Carrier waveform plot
+subplot(2,1,1);
+plot(t(1:1000), carrier(1:1000));
+title('Carrier Frequency (440 Hz)');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+% Modulated waveform plot
+subplot(2,1,2);
+plot(t(1:1000), modulated_signal(1:1000));
+title('FM Synthesized Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+##### SOURCE END #####
+-->
+</body>
+</html>
